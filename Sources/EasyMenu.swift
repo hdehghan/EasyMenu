@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import Combine
 
 #if os(macOS)
 import AppKit
@@ -21,7 +22,8 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     @State private var showMenu: Bool = false
     @State private var screenWidth: Double = 0
     @State private var screenHeight: Double = 0
-    
+    @Binding private var isActive: Bool
+
     var label: Label!
     var content: Content!
     
@@ -34,6 +36,7 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     public init(@ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
         self.content = content()
         self.label = label()
+        self._isActive = .constant(false)
     }
 
     /// Creates a menu that generates its label from a string.
@@ -44,7 +47,20 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     public init<S>(_ title: S, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
         self.content = content()
         self.label = Text(title)
+        self._isActive = .constant(false)
     }
+    
+    /// Creates a Menu that presents the content when active.
+    /// - Parameters:
+    ///   - isActive: A binding to a Boolean value that indicates whether
+    ///   `menu content` is currently presented.
+    public init(isActive: Binding<Bool>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+        self.content = content()
+        self.label = label()
+        
+        self._isActive = isActive
+    }
+
     
     // MARK: Body
     public var body: some View {
@@ -68,6 +84,11 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
         })
         .overlay(backgroundOverlay())
         .overlay(menuOverlay())
+        .onChange(of: isActive) { newValue in
+            withAnimation(.easeInOut(duration: config.animationDuration)) {
+                showMenu.toggle()
+            }
+        }
 //        .zIndex(Double.infinity)
     }
 }
