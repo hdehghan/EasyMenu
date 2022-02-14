@@ -19,6 +19,33 @@ To integrate EasyMenu into your project using SwiftPM add the following to your 
     .package(url: "https://github.com/hdehghan/EasyMenu", from: "0.1.0"),
 ],
 ```
+## Usage
+
+To deploy this project run
+
+```swift
+EasyMenu {
+    Group {
+        HStack {
+            Image(systemName: "sun.min.fill")
+                .foregroundColor(Color(.secondaryLabel))
+            Slider(value: .constant(0.5))
+            Image(systemName: "sun.max.fill")
+                .foregroundColor(Color(.secondaryLabel))
+        }
+        .padding(.horizontal)
+            .frame(height: 50)
+    }
+                
+    Divider()
+                    
+    Toggle("Show Translate", isOn: .constant(true))
+        .padding(.horizontal)
+            .frame(height: 54.0)
+} label: {
+    Image(systemName: "textformat.size")
+}
+```
 ## Demo
 
 <p align="center">
@@ -29,7 +56,7 @@ To integrate EasyMenu into your project using SwiftPM add the following to your 
 ## Requirements
 | EasyMenu          | Swift           | Xcode           | Platforms |
 |---------------|-----------------|-----------------|----------------|
-| EasyMenu 0.1    | Swift 5.0       | Xcode 12.0      | iOS 14.0  |
+| EasyMenu 0.1    | Swift 5.0       | Xcode 12.0      | iOS 13.0  |
 
 
 ## Roadmap
