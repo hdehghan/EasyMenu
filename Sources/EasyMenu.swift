@@ -12,7 +12,7 @@ import AppKit
 import UIKit
 #endif
 
-@available(iOS 13.0, tvOS 13.0, watchOS 7.0, macOS 10.15, *)
+@available(iOS 13.0, tvOS 13.0, watchOS 7.0, macOS 11, *)
 public struct EasyMenu<Label, Content> : View where Label : View, Content : View {
     @Environment(\.colorScheme) var colorScheme
 
@@ -89,12 +89,12 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
                 showMenu.toggle()
             }
         }
-//        .zIndex(Double.infinity)
+        .zIndex(.infinity)
     }
 }
 
 ///
-@available(iOS 13.0, tvOS 13.0, watchOS 7.0, macOS 10.15, *)
+@available(iOS 13.0, tvOS 13.0, watchOS 7.0, macOS 11, *)
 extension EasyMenu {
     func backgroundOverlay() -> some View {
         GeometryReader { geo in
@@ -118,7 +118,7 @@ extension EasyMenu {
 }
 
 ///
-@available(iOS 13.0, tvOS 13.0, watchOS 7.0, macOS 10.15, *)
+@available(iOS 13.0, tvOS 13.0, watchOS 7.0, macOS 11, *)
 extension EasyMenu {
     @ViewBuilder
     func menuOverlay() -> some View {
