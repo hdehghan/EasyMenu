@@ -34,14 +34,14 @@ EasyMenu {
                 .foregroundColor(Color(.secondaryLabel))
         }
         .padding(.horizontal)
-            .frame(height: 50)
+        .frame(height: 50)
     }
                 
     Divider()
                     
     Toggle("Show Translate", isOn: .constant(true))
         .padding(.horizontal)
-            .frame(height: 54.0)
+        .frame(height: 54.0)
 } label: {
     Image(systemName: "textformat.size")
 }
