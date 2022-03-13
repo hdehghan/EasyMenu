@@ -129,6 +129,10 @@ extension EasyMenu {
             if showMenu {
                 VStack(spacing: 0.0) {
                     content
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            // Nothing
+                        }
                 }
                 .background(
                     GeometryReader { geo in
