@@ -10,15 +10,18 @@ public struct EasyDivider: View {
     @Environment(\.colorScheme) var colorScheme
 
     var height: Double = 8
+    var color: Color?
 
-    public init(height: Double = 8) {
+    public init(height: Double = 8, color: Color? = nil) {
         self.height = height
+        if let color = color {
+            self.color = color
+        }
     }
     public var body: some View {
         Rectangle()
-            .fill(colorScheme == .dark ?
-                  Color(white: 26.0 / 255.0) :
-                    Color(white: 225.0 / 255.0))
+            .fill(colorScheme == .dark ? color ?? Color(white: 26.0 / 255.0) :
+                    color ?? Color(white: 225.0 / 255.0))
             .frame(height: height)
     }
 }
