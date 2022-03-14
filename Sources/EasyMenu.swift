@@ -27,6 +27,7 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     var label: Label!
     var content: Content!
     var width: Double!
+    var backgroundColor: Color?
     
     // MARK: Transition
     /// A animated transition to be performed when displaying Menu
@@ -34,11 +35,12 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     var transition: EasyTransition = .default
 
     // MARK: Init
-    public init(width: Double = -1, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    public init(backgroundColor: Color? = nil, width: Double = -1, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
         self.content = content()
         self.label = label()
         self._isActive = .constant(false)
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
+        self.backgroundColor = backgroundColor
     }
 
     /// Creates a menu that generates its label from a string.
@@ -46,22 +48,24 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     /// - Parameters:
     ///     - title: A string that describes the contents of the menu.
     ///     - content: A group of menu items.
-    public init<S>(_ title: S, width: Double = -1, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
+    public init<S>(_ title: S, backgroundColor: Color? = nil, width: Double = -1, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
         self.content = content()
         self.label = Text(title)
         self._isActive = .constant(false)
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
+        self.backgroundColor = backgroundColor
     }
     
     /// Creates a Menu that presents the content when active.
     /// - Parameters:
     ///   - isActive: A binding to a Boolean value that indicates whether
     ///   `menu content` is currently presented.
-    public init(width: Double = -1, isActive: Binding<Bool>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    public init(backgroundColor: Color? = nil, width: Double = -1, isActive: Binding<Bool>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
         self.content = content()
         self.label = label()
         self._isActive = isActive
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
+        self.backgroundColor = backgroundColor
     }
 
     
@@ -142,11 +146,14 @@ extension EasyMenu {
                                 .cornerRadius(config.cornerRadius)
                                 .opacity(0.8)
                                 .shadow(color: .black.opacity(0.5), radius: config.shadowRadius, x: 0, y: 10)
-                            
-                            #if os(macOS)
-                            #else
-                            EasyBlurView(style: colorScheme == .dark ? .systemUltraThinMaterialDark : .extraLight).cornerRadius(config.cornerRadius)
-                            #endif
+                            if let backgroundColor = self.backgroundColor {
+                                backgroundColor.cornerRadius(config.cornerRadius)
+                            } else {
+                                #if os(macOS)
+                                #else
+                                EasyBlurView(style: colorScheme == .dark ? .systemUltraThinMaterialDark : .extraLight).cornerRadius(config.cornerRadius)
+                                #endif
+                            }
                         }
                         .onAppear {
                             self.height = geo.size.height
