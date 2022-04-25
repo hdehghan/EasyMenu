@@ -174,7 +174,6 @@ extension EasyMenu {
     }
     func menuOffsetX(_ x: Double) -> Double {
         if isCenter {
-            print(x)
             return -x + (screenWidth - width) / 2.0
         }
         
