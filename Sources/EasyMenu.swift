@@ -27,6 +27,7 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     var label: Label!
     var content: Content!
     var width: Double!
+    var isCenter: Bool!
     var backgroundColor: Color?
     
     // MARK: Transition
@@ -35,12 +36,13 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     var transition: EasyTransition = .default
 
     // MARK: Init
-    public init(backgroundColor: Color? = nil, width: Double = -1, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    public init(backgroundColor: Color? = nil, width: Double = -1, isCenter: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
         self.content = content()
         self.label = label()
         self._isActive = .constant(false)
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
         self.backgroundColor = backgroundColor
+        self.isCenter = isCenter
     }
 
     /// Creates a menu that generates its label from a string.
@@ -48,24 +50,28 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     /// - Parameters:
     ///     - title: A string that describes the contents of the menu.
     ///     - content: A group of menu items.
-    public init<S>(_ title: S, backgroundColor: Color? = nil, width: Double = -1, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
+    ///     - isCenter: Menu always shows in the X-center
+    public init<S>(_ title: S, backgroundColor: Color? = nil, width: Double = -1, isCenter: Bool = false, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
         self.content = content()
         self.label = Text(title)
         self._isActive = .constant(false)
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
         self.backgroundColor = backgroundColor
+        self.isCenter = isCenter
     }
     
     /// Creates a Menu that presents the content when active.
     /// - Parameters:
     ///   - isActive: A binding to a Boolean value that indicates whether
+    ///   - isCenter: Menu always shows in the X-center
     ///   `menu content` is currently presented.
-    public init(backgroundColor: Color? = nil, width: Double = -1, isActive: Binding<Bool>, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    public init(backgroundColor: Color? = nil, width: Double = -1, isActive: Binding<Bool>, isCenter: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
         self.content = content()
         self.label = label()
         self._isActive = isActive
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
         self.backgroundColor = backgroundColor
+        self.isCenter = isCenter
     }
 
     
@@ -167,6 +173,11 @@ extension EasyMenu {
         .frame(width: width, height: height)
     }
     func menuOffsetX(_ x: Double) -> Double {
+        if isCenter {
+            print(x)
+            return -x + (screenWidth - width) / 2.0
+        }
+        
         if x < 8 {
             return -x + 8
         } else if x + width > screenWidth - 8 {
