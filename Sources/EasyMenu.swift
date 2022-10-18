@@ -23,26 +23,34 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     @State private var screenWidth: Double = 0
     @State private var screenHeight: Double = 0
     @Binding private var isActive: Bool
-
+    
     var label: Label!
     var content: Content!
     var width: Double!
     var isCenter: Bool!
     var backgroundColor: Color?
-    
+    var dismissAction: (() -> Void)?
     // MARK: Transition
     /// A animated transition to be performed when displaying Menu
     /// By default, `.scale.combined(with: .opacity)`. with duration 0.25
     var transition: EasyTransition = .default
 
     // MARK: Init
-    public init(backgroundColor: Color? = nil, width: Double = -1, isCenter: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    public init(
+        backgroundColor: Color? = nil,
+        width: Double = -1,
+        isCenter: Bool = false,
+        @ViewBuilder content: () -> Content,
+        @ViewBuilder label: () -> Label,
+        dismissAction: (() -> Void)? = nil
+    ) {
         self.content = content()
         self.label = label()
         self._isActive = .constant(false)
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
         self.backgroundColor = backgroundColor
         self.isCenter = isCenter
+        self.dismissAction = dismissAction
     }
 
     /// Creates a menu that generates its label from a string.
@@ -51,13 +59,21 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     ///     - title: A string that describes the title button of the menu.
     ///     - content: A group of menu items.
     ///     - isCenter: Menu always shows in the X-center
-    public init<S>(_ title: S, backgroundColor: Color? = nil, width: Double = -1, isCenter: Bool = false, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
+    public init<S>(
+        _ title: S,
+        backgroundColor: Color? = nil,
+        width: Double = -1,
+        isCenter: Bool = false,
+        @ViewBuilder content: () -> Content,
+        dismissAction: (() -> Void)? = nil
+    ) where Label == Text, S : StringProtocol {
         self.content = content()
         self.label = Text(title)
         self._isActive = .constant(false)
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
         self.backgroundColor = backgroundColor
         self.isCenter = isCenter
+        self.dismissAction = dismissAction
     }
     
     /// Creates a Menu that presents the content when active.
@@ -65,15 +81,24 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     ///   - isActive: A binding to a Boolean value that indicates whether show menu or not
     ///   - isCenter: Menu always shows in the X-center
     ///   `menu content` is currently presented.
-    public init(backgroundColor: Color? = nil, width: Double = -1, isActive: Binding<Bool>, isCenter: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
+    public init(
+        backgroundColor: Color? = nil,
+        width: Double = -1,
+        isActive: Binding<Bool>,
+        isCenter: Bool = false,
+        @ViewBuilder content: () -> Content,
+        @ViewBuilder label: () -> Label,
+        dismissAction: (() -> Void)? = nil
+    ) {
         self.content = content()
         self.label = label()
         self._isActive = isActive
         self.width = width > 0 ? width : EasyMenuConfiguration.default.width
         self.backgroundColor = backgroundColor
         self.isCenter = isCenter
+        self.dismissAction = dismissAction
     }
-
+    
     
     // MARK: Body
     public var body: some View {
@@ -103,6 +128,11 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
             }
         }
         .zIndex(.infinity)
+        .onChange(of: showMenu) { newValue in
+            if let dismissAction, !newValue {
+                dismissAction()
+            }
+        }
     }
 }
 
