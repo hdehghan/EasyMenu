@@ -48,7 +48,7 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     /// Creates a menu that generates its label from a string.
     ///
     /// - Parameters:
-    ///     - title: A string that describes the contents of the menu.
+    ///     - title: A string that describes the title button of the menu.
     ///     - content: A group of menu items.
     ///     - isCenter: Menu always shows in the X-center
     public init<S>(_ title: S, backgroundColor: Color? = nil, width: Double = -1, isCenter: Bool = false, @ViewBuilder content: () -> Content) where Label == Text, S : StringProtocol {
@@ -62,7 +62,7 @@ public struct EasyMenu<Label, Content> : View where Label : View, Content : View
     
     /// Creates a Menu that presents the content when active.
     /// - Parameters:
-    ///   - isActive: A binding to a Boolean value that indicates whether
+    ///   - isActive: A binding to a Boolean value that indicates whether show menu or not
     ///   - isCenter: Menu always shows in the X-center
     ///   `menu content` is currently presented.
     public init(backgroundColor: Color? = nil, width: Double = -1, isActive: Binding<Bool>, isCenter: Bool = false, @ViewBuilder content: () -> Content, @ViewBuilder label: () -> Label) {
