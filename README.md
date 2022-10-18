@@ -56,7 +56,7 @@ EasyMenu {
 ## Requirements
 | EasyMenu          | Swift           | Xcode           | Platforms |
 |---------------|-----------------|-----------------|----------------|
-| EasyMenu 0.1    | Swift 5.0       | Xcode 12.0      | iOS 13.0  |
+| EasyMenu 0.2    | Swift 5.0       | Xcode 12.0      | iOS 13.0  |
 
 
 ## Roadmap
