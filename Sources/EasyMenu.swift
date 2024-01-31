@@ -196,7 +196,7 @@ extension EasyMenu {
                         }
                     }
                 )
-                .offset(x: menuOffsetX(geo.frame(in: .global).origin.x), y: height / 2.0 + 16)
+                .offset(x: menuOffsetX(geo.frame(in: .global).origin.x), y: menuOffsetY(geo.frame(in: .global).origin.y))
                 .transition(transition.value)
             }
         }
@@ -214,4 +214,7 @@ extension EasyMenu {
         }
         return 0
     }    
+    func menuOffsetY(_ y: Double) -> Double {
+        return y > screenHeight / 3.5 ? -height / 1.5 + 16 : height / 2.0 + 16
+    }
 }
